@@ -1,11 +1,22 @@
 import express from "express";
 import { PORT } from "./config/serverConfig.js";
 import { connectDB } from "./config/dbConfig.js";
-
+import bookRouter from "./routes/book.js";
 const app = express();
+
+app.use(express.text());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/book", bookRouter);
 
 app.get("/", (req, res) => {
   res.send("Helloooooooo World!!, this is an express server.");
+});
+app.get("/ping", (req, res) => {
+  res.json({
+    message: "Pong",
+  });
 });
 
 app.listen(PORT, () => {
