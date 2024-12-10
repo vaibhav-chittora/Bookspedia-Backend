@@ -1,14 +1,10 @@
-import { createUser } from "../repositories/user.js";
+import { createUser, findUserByEmail } from "../repositories/user.js";
+import bcrypt from "bcrypt";
 
 export const signUp = async (data) => {
   try {
     const newUser = await createUser(data);
     return newUser;
-    // if(newUser){
-    //     res.status(400).json({
-    //         message:
-    //     })
-    // }
   } catch (error) {
     if (error.name === "MongoServerError" && error.code === 11000) {
       throw {
@@ -16,6 +12,34 @@ export const signUp = async (data) => {
         message: "User with same email already exists",
       };
     }
+    throw error;
+  }
+};
+
+export const signIn = async (data) => {
+  try {
+    const user = await findUserByEmail(data.email);
+    const isPasswordValid = await bcrypt.compare(data.password, user.password);
+    console.log("Data.email - ", data.email);
+    console.log("Data.password - ", data.password);
+    console.log("user.password - ", user.password);
+
+    if (!user) {
+      throw {
+        status: 404,
+        message: "user not found ",
+      };
+    }
+
+    if (!isPasswordValid) {
+      throw {
+        status: 401,
+        message: "Invalid Password",
+      };
+    }
+    return user;
+  } catch (error) {
+    console.log("Error in user signin Service", error);
     throw error;
   }
 };
