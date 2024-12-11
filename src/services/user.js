@@ -19,17 +19,16 @@ export const signUp = async (data) => {
 export const signIn = async (data) => {
   try {
     const user = await findUserByEmail(data.email);
-    const isPasswordValid = await bcrypt.compare(data.password, user.password);
-    console.log("Data.email - ", data.email);
-    console.log("Data.password - ", data.password);
-    console.log("user.password - ", user.password);
-
     if (!user) {
       throw {
         status: 404,
         message: "user not found ",
       };
     }
+    const isPasswordValid = await bcrypt.compare(data.password, user.password);
+    console.log("Data.email - ", data.email);
+    console.log("Data.password - ", data.password);
+    console.log("user.password - ", user.password);
 
     if (!isPasswordValid) {
       throw {

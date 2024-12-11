@@ -15,6 +15,6 @@ export const findUserByEmail = async (email) => {
     const user = await User.findOne({ email });
     return user;
   } catch (error) {
-    console.log("Error in fidnding the User Repository", error);
+    console.log("Error in finding the User Repository", error);
   }
 };
