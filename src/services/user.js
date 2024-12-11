@@ -12,6 +12,12 @@ export const signUp = async (data) => {
         message: "User with same email already exists",
       };
     }
+    if (error.name === "ValidationError") {
+      throw {
+        status: 400,
+        message: "Password should be atleast 5 characters long",
+      };
+    }
     throw error;
   }
 };
